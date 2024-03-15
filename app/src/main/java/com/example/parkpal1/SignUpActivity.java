@@ -1,17 +1,22 @@
 package com.example.parkpal1;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 public class SignUpActivity extends AppCompatActivity {
 
     private Spinner roleSpinner;
     private Button signUpButton;
+    private EditText usernameEditText, emailEditText, passwordEditText;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,11 @@ public class SignUpActivity extends AppCompatActivity {
         // Initialize views
         roleSpinner = findViewById(R.id.roleSpinner);
         signUpButton = findViewById(R.id.signUpButton);
+        usernameEditText = findViewById(R.id.usernameEditText);
+        emailEditText = findViewById(R.id.emailEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+
+        dbHelper = new DatabaseHelper(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -34,22 +44,30 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Perform sign up action
+                // Get user input
+                String username = usernameEditText.getText().toString();
+                String email = emailEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                String role = roleSpinner.getSelectedItem().toString();
+
+                // Check if any field is empty
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Add user to database
+                    boolean isInserted = dbHelper.addUser(username, email, password, role);
+                    if (isInserted) {
+                        Toast.makeText(SignUpActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                        // Redirect to login activity
+                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "Failed to register user", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
-        // Set spinner item selected listener
-        roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedRole = parent.getItemAtPosition(position).toString();
-                // Handle the selected role
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle nothing selected
-            }
-        });
     }
 }
