@@ -54,11 +54,9 @@ public class LoginActivity extends AppCompatActivity {
                     boolean isValidUser = dbHelper.checkUser(username, password, role);
                     if (isValidUser) {
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        // Redirect to main activity or dashboard
-                        // For example:
-                        // Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        // startActivity(intent);
-                        // finish();
+                        Intent intent = new Intent(LoginActivity.this, SimpleMapActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                     }
@@ -71,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Start sign up activity
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+
             }
         });
 
