@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/parking_zone">
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/transparent"
+        android:text="@string/geri">
+    </Button>
+
+    <TextView
+        android:id="@+id/zone_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="260dp"
+        android:layout_marginStart="35dp"
+        android:text="A1"
+        android:textSize="45dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <TextView
+        android:id="@+id/code_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-80dp"
+        android:layout_marginTop="410dp"
+        android:text="1234"
+        android:textSize="45dp"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <Button
+        android:id="@+id/getDirectionsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="530dp"
+        android:layout_marginLeft="-200dp"
+        android:layout_weight="80"
+        android:height="70dp"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/transparent"
+        android:text="@string/direction">
+
+    </Button>
+
+
+</LinearLayout>

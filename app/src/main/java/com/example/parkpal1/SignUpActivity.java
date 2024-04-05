@@ -9,10 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-
 public class SignUpActivity extends AppCompatActivity {
-
     private Spinner roleSpinner;
     private Button signUpButton;
     private EditText usernameEditText, emailEditText, passwordEditText;
@@ -23,13 +20,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_screen);
 
-        // Initialize views
         roleSpinner = findViewById(R.id.roleSpinner);
         signUpButton = findViewById(R.id.signUpButton);
         usernameEditText = findViewById(R.id.usernameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-
         dbHelper = new DatabaseHelper(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -37,28 +32,21 @@ public class SignUpActivity extends AppCompatActivity {
                 R.array.roles_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         roleSpinner.setAdapter(adapter);
-
-        // Set click listener for sign up button
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get user input
                 String username = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 String role = roleSpinner.getSelectedItem().toString();
 
-                // Check if any field is empty
                 if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Add user to database
                     boolean isInserted = dbHelper.addUser(username, email, password, role);
                     if (isInserted) {
                         Toast.makeText(SignUpActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                        // Redirect to login activity
                         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();

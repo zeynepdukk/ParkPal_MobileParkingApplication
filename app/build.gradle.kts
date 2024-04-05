@@ -15,6 +15,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    packagingOptions {
+        resources {
+            excludes += setOf(
+                // To compile the current version of UX Framework you need to add only these two lines:
+                "META-INF/DEPENDENCIES",
+                "META-INF/INDEX.LIST",
+            )
+        }
+    }
 
     buildTypes {
         release {
@@ -46,7 +55,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.mapbox.maps:android:11.2.1")
+    implementation("com.mapbox.maps:android:10.16.3")
     implementation("com.mapbox.extension:maps-compose:11.2.1")
+    //implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.7.1")
+   // implementation("com.mapbox.navigation:android:2.18.0")
+    //implementation("com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0")
+   // implementation("com.mapbox.navigation:ui-dropin:2.19.0")
+    implementation("com.mapbox.navigation:android:2.17.1")
 
 }

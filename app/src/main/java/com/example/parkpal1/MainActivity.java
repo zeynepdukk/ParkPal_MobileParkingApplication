@@ -1,6 +1,5 @@
 package com.example.parkpal1;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,47 +13,48 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button startButton;
+    private Button loginButton, signUpButton;
+
     private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-
-        startButton = findViewById(R.id.startButton);
+        loginButton = findViewById(R.id.loginButton1);
+        signUpButton = findViewById(R.id.signUpButton1);
         dbHelper = new DatabaseHelper(this);
 
-        // Set onClickListener for the start button
-        startButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle button click event
-                // For now, let's just start the LoginActivity
+                // Start LoginActivity when loginButton is clicked
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
+        // Set click listener for the sign up button
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start SignUpActivity when signUpButton is clicked
+                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        // Log the list of users
         logUsers();
     }
 
     private void logUsers() {
-        // Kullanıcı listesini al
         List<User> userList = dbHelper.getAllUsers();
-
-        // Eğer kullanıcı listesi boş değilse
         if (userList != null && !userList.isEmpty()) {
-            // Her bir kullanıcı için
             for (User user : userList) {
-                // Kullanıcı bilgilerini logla
                 Log.d("User", "Username: " + user.getUsername() +
                         ", Email: " + user.getEmail() +
                         ", Role: " + user.getRole());
             }
         } else {
-            // Kullanıcı bulunamadıysa
             Log.d("User", "No users found in the database.");
         }
     }

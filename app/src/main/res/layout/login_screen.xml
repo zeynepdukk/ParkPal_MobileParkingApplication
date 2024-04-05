@@ -3,50 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/log">
+    android:background="@drawable/login">
 
     <!-- Spinner to select role -->
     <Spinner
         android:id="@+id/roleSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
+        android:background="@color/colorAccent"
+        android:layout_marginTop="320dp"
+        android:layout_marginLeft="170dp"
+        />
 
     <!-- Username input field -->
     <EditText
         android:id="@+id/usernameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_marginLeft="150dp"
         android:hint="Username"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:textColor="@color/white"/>
 
     <!-- Password input field -->
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="150dp"
+        android:textColor="@color/white"/>
 
     <!-- Login button -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:background="@drawable/button_background"
-
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="150dp"
+        android:width="100dp"
+        android:background="@android:color/transparent"
         />
-
-    <!-- Sign up button -->
-    <Button
-        android:id="@+id/signUpButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"/>
 
 </LinearLayout>
 

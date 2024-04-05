@@ -3,46 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/log">
+    android:background="@drawable/signup">
 
     <Spinner
         android:id="@+id/roleSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
-
-
-    <!-- Username input field -->
+        android:background="@color/colorAccent"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="170dp"
+        />
     <EditText
         android:id="@+id/usernameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text"/>
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="100dp"
+        android:width="200dp">
 
-    <!-- Password input field -->
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"/>
-
-    <!-- Email input field -->
+    </EditText>
     <EditText
         android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"/>
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="100dp"
+        android:width="200dp">
 
-    <!-- Sign up button -->
+    </EditText>
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="100dp"
+        android:width="200dp">
+
+    </EditText>
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:background="@drawable/button_background"/>
-
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="100dp"
+        android:width="200dp"
+        android:background="@android:color/transparent">
+    </Button>
 </LinearLayout>

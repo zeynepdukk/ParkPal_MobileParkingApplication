@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private Button startButton;
+    private Button loginButton, signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,14 +15,24 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.splash_screen);
 
         // Initialize views
-        startButton = findViewById(R.id.startButton);
+        loginButton = findViewById(R.id.loginButton1);
+        signUpButton= findViewById(R.id.signUpButton1);
 
-        // Set click listener for start button
-        startButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start login activity
+                // Start LoginActivity when loginButton is clicked
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Set click listener for the sign up button
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start SignUpActivity when signUpButton is clicked
+                Intent intent = new Intent(SplashScreenActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,4 +1,4 @@
 package com.example.parkpal1;
 
-public class AttendantActivity {
+public class Street1Activity {
 }
