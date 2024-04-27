@@ -9,8 +9,10 @@ import android.content.SharedPreferences;
 
 public class Street2Activity extends AppCompatActivity {
     private String userRole;
-
     private DatabaseHelper dbHelper;
+    double lat=40.956739;
+    double lon=29.080463;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +37,6 @@ public class Street2Activity extends AppCompatActivity {
         Button parking2_a4 = findViewById(R.id.parking2_a4);
         Button parking2_b4 = findViewById(R.id.parking2_b4);
 
-
-
         parking2_backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +56,6 @@ public class Street2Activity extends AppCompatActivity {
         setButtonClickListener(parking2_b4, "B4");
     }
 
-    // Butonlara tıklama olaylarını atayan fonksiyon
     private void setButtonClickListener(Button button, final String zone) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +66,6 @@ public class Street2Activity extends AppCompatActivity {
         });
     }
 
-    // ZoneActivity'ye yönlendiren fonksiyon
     private void openZoneActivity(String zone) {
         Class<?> targetActivity;
         if (userRole.equals("Driver")) {
@@ -77,6 +75,8 @@ public class Street2Activity extends AppCompatActivity {
         }
         Intent intent = new Intent(Street2Activity.this, targetActivity);
         intent.putExtra("zone", zone);
+        intent.putExtra("lat", lat);
+        intent.putExtra("lon", lon);
         startActivity(intent);
     }
     // Park yeri durumuna göre ImageView'ları güncelleyen metot

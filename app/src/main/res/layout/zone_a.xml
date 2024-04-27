@@ -12,28 +12,47 @@
         android:text="back">
     </Button>
 
+
     <TextView
         android:id="@+id/zone_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="35dp"
         android:text="A1"
         android:textSize="45dp"
         android:textStyle="bold">
     </TextView>
+    <Button
+        android:id="@+id/checkCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="@android:color/black"
+        android:textColor="@android:color/white"
+        android:text="check">
+    </Button>
 
-    <TextView
-        android:id="@+id/code_text"
+
+    <EditText
+        android:id="@+id/codeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-80dp"
         android:layout_marginTop="410dp"
-        android:text="1234"
-        android:textSize="45dp"
+        android:hint="Check the code here"
+        :textSize="45dp"
         android:textStyle="bold">
 
-    </TextView>
+    </EditText>
+    <Button
+        android:id="@+id/generateCodeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Generate code">
+
+    </Button>
 
     <Button
         android:id="@+id/markButton"
@@ -44,9 +63,10 @@
         android:layout_weight="80"
         android:height="70dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="Reserve/Unreserve for Driver">
+        android:text="dolu/boş">
 
     </Button>
+
 
 
 </LinearLayout>

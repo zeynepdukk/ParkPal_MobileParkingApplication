@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "parking.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Kullanıcı tablosu ve sütunları
     private static final String TABLE_USERS = "users";
@@ -26,6 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_PARKING = "parking_status";
     private static final String COLUMN_ZONE = "zone";
     private static final String COLUMN_STATUS = "status";
+    private static final String COLUMN_CODE = "code";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,9 +50,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String SQL_CREATE_PARKING_TABLE =
                 "CREATE TABLE " + TABLE_PARKING + " (" +
                         COLUMN_ZONE + " TEXT PRIMARY KEY," +
-                        COLUMN_STATUS + " INTEGER DEFAULT 0" +
+                        COLUMN_STATUS + " INTEGER DEFAULT 0," +
+                        COLUMN_CODE + " TEXT" + // Yeni sütun ekleme
                         ")";
         db.execSQL(SQL_CREATE_PARKING_TABLE);
+
     }
 
     @Override
@@ -126,4 +130,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return status;
     }
+    private String generateRandomCode() {
+        Random random = new Random();
+        int code = random.nextInt(9000) + 1000; // Dört haneli rastgele sayı oluştur
+        return String.valueOf(code);
+    }
+    public boolean addParkingZone(String zone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ZONE, zone);
+        values.put(COLUMN_STATUS, 0); // Başlangıçta park yeri boş
+        values.put(COLUMN_CODE, generateRandomCode()); // Rastgele dört haneli kod oluştur
+        long result = db.insert(TABLE_PARKING, null, values);
+        return result != -1;
+    }
+    public String getCode(String zone) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PARKING, new String[]{COLUMN_CODE}, COLUMN_ZONE + "=?", new String[]{zone}, null, null, null);
+        String code = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            int codeColumnIndex = cursor.getColumnIndex(COLUMN_CODE);
+            if (codeColumnIndex != -1) {
+                code = cursor.getString(codeColumnIndex);
+            }
+            cursor.close();
+        }
+        return code;
+    }
+
 }

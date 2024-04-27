@@ -2,8 +2,10 @@ package com.example.parkpal1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ZoneActivityA extends AppCompatActivity {
 
-    private TextView zoneText, codeText;
-    private Button markButton, backButton;
+    private TextView zoneText;
+    private Button markButton, backButton, checkCode;
     private DatabaseHelper dbHelper;
 
+    private EditText codeEditText;
     private String zone;
     private int status;
 
@@ -26,9 +29,10 @@ public class ZoneActivityA extends AppCompatActivity {
 
         // View'leri tanımla
         zoneText = findViewById(R.id.zone_text);
-        codeText = findViewById(R.id.code_text);
+        codeEditText = findViewById(R.id.codeEditText);
         markButton = findViewById(R.id.markButton);
         backButton = findViewById(R.id.backButton);
+        checkCode = findViewById(R.id.checkCode);
 
         dbHelper = new DatabaseHelper(this);
 
@@ -41,44 +45,58 @@ public class ZoneActivityA extends AppCompatActivity {
         }
 
         // Park yeri doluluk durumuna göre markButton'un metnini güncelle
-        updateMarkButton();
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Street2Activity'e geri dön
-                Intent intent = new Intent(ZoneActivityA.this, Street2Activity.class);
+                Intent intent;
+                String sourceActivity = getIntent().getStringExtra("sourceActivity");
+                if (sourceActivity != null && sourceActivity.equals("Street1Activity")) {
+                    intent = new Intent(ZoneActivityA.this, Street1Activity.class);
+                } else {
+                    intent = new Intent(ZoneActivityA.this, Street2Activity.class);
+                }
                 startActivity(intent);
             }
         });
+
         markButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Park yeri dolu ise boş yap, boş ise dolu yap
+                // Park yeri dolu ise boş yap
                 if (status == 1) {
                     status = 0;
+                    dbHelper.updateStatus(zone, status);
                 } else {
-                    status = 1;
+                    Toast.makeText(ZoneActivityA.this, "Park yeri zaten boş", Toast.LENGTH_SHORT).show();
                 }
-                // Doluluk durumunu güncelle
-                dbHelper.updateStatus(zone, status);
-                // Metni güncelle
-                updateMarkButton();
             }
         });
 
-        // Diğer işlemler devam ediyor...
-    }
-    private void updateMarkButton() {
-        if (status == 1) {
-            markButton.setText("Boşalt"); // Eğer park yeri dolu ise, "Boşalt" olarak değiştir
-            showToast("Park yeri başarıyla dolu olarak işaretlendi.");
-        } else {
-            markButton.setText("Dolu"); // Eğer park yeri boş ise, "Dolu" olarak değiştir
-            showToast("Park yeri başarıyla boş olarak işaretlendi.");
-        }
-    }
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+        checkCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Girilen kodu al
+                String enteredCode = codeEditText.getText().toString().trim();
+
+                // Kodun boş olup olmadığını kontrol et
+                if (TextUtils.isEmpty(enteredCode)) {
+                    Toast.makeText(ZoneActivityA.this, "Lütfen bir kod girin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Girilen kodun veritabanındaki kodla eşleşip eşleşmediğini kontrol et
+                String zoneCode = dbHelper.getCode(zone);
+                if (enteredCode.equals(zoneCode)) {
+                    // Eşleşiyorsa park yeri durumunu güncelle
+                    status = 1;
+                    dbHelper.updateStatus(zone, status);
+                } else {
+                    Toast.makeText(ZoneActivityA.this, "Girilen kod hatalı", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 }

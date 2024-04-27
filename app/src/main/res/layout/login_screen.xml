@@ -5,23 +5,29 @@
     android:orientation="vertical"
     android:background="@drawable/login">
 
-    <!-- Spinner to select role -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@android:color/transparent">
+    </Button>
+
     <Spinner
         android:id="@+id/roleSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="230dp"
         android:layout_marginLeft="170dp"
         />
 
     <!-- Username input field -->
     <EditText
         android:id="@+id/usernameEditText"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:layout_marginLeft="150dp"
+        android:layout_marginLeft="120dp"
         android:hint="Username"
         android:inputType="text"
         android:textColor="@color/white"/>
@@ -29,12 +35,12 @@
     <!-- Password input field -->
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="150dp"
+        android:layout_marginLeft="120dp"
         android:textColor="@color/white"/>
 
     <!-- Login button -->
@@ -43,8 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="150dp"
-        android:width="100dp"
+        android:layout_marginLeft="120dp"
+        android:width="200dp"
         android:background="@android:color/transparent"
         />
 

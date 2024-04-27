@@ -10,15 +10,15 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/parking2_backbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
             android:background="@android:color/transparent">
         </Button>
         <Button
             android:id="@+id/parking2_a1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="-72dp"
+            android:layout_marginStart="-80dp"
             android:layout_marginTop="160dp"
             android:width="100dp"
             android:height="100dp"
@@ -28,10 +28,11 @@
             android:id="@+id/a1_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="-112dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginStart="-122dp"
+            android:layout_marginTop="160dp"
+            android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_b1"
@@ -47,16 +48,17 @@
             android:id="@+id/b1_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="-110dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginStart="-120dp"
+            android:layout_marginTop="160dp"
+            android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_a2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="-370dp"
+            android:layout_marginStart="-365dp"
             android:layout_marginTop="290dp"
             android:width="100dp"
             android:height="100dp"
@@ -65,10 +67,11 @@
             android:id="@+id/a2_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="-130dp"
-            android:layout_marginTop="275dp"
+            android:layout_marginStart="-147dp"
+            android:layout_marginTop="290dp"
+            android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_b2"
@@ -84,11 +87,11 @@
             android:id="@+id/b2_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="-115dp"
-            android:layout_marginTop="275dp"
+            android:layout_marginStart="-130dp"
+            android:layout_marginTop="290dp"
             android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_a3"
@@ -106,10 +109,10 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="-135dp"
-            android:layout_marginTop="395dp"
+            android:layout_marginTop="414dp"
             android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_b3"
@@ -125,11 +128,11 @@
             android:id="@+id/b3_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="-125dp"
-            android:layout_marginTop="395dp"
+            android:layout_marginStart="-130dp"
+            android:layout_marginTop="415dp"
             android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_a4"
@@ -146,10 +149,10 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="-135dp"
-            android:layout_marginTop="510dp"
+            android:layout_marginTop="535dp"
             android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/parking2_b4"
@@ -167,10 +170,10 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="-125dp"
-            android:layout_marginTop="510dp"
+            android:layout_marginTop="535dp"
             android:layout_weight="1"
             android:background="@drawable/cartop"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
     </LinearLayout>
 </LinearLayout>

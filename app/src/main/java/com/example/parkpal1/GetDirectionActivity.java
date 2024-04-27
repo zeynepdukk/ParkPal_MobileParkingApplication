@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -78,6 +79,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class GetDirectionActivity extends AppCompatActivity {
+
+    double lat;
+    double lon;
     MapView mapView;
     FloatingActionButton focusLocationBtn;
     private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
@@ -151,6 +155,18 @@ public class GetDirectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.direction_layout);
+        if (getIntent() != null && getIntent().hasExtra("lat") && getIntent().hasExtra("lon")) {
+            lat = getIntent().getDoubleExtra("lat", 0.0);
+            lon = getIntent().getDoubleExtra("lon", 0.0);
+            Log.d("GetDirectionActivity", "Latitude: " + lat + ", Longitude: " + lon);
+        } else {
+            // getIntent() null ise veya lat ve lon değerleri alınamıyorsa, uygun bir işlem yapın
+            // Örneğin:
+            Toast.makeText(this, "Lat and Lon values are not provided", Toast.LENGTH_SHORT).show();
+            // Veya varsayılan değerlerle devam etmek isterseniz:
+            lat = 0.0;
+            lon = 0.0;
+        }
 
         mapView = findViewById(R.id.mapView);
         focusLocationBtn = findViewById(R.id.focusLocation);
@@ -223,7 +239,9 @@ public class GetDirectionActivity extends AppCompatActivity {
 // Şimdi kalan işlemleri gerçekleştirin
                 AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
                 PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
-                Point point = Point.fromLngLat( 29.080499, 40.956809);
+                Point point=Point.fromLngLat(lon,lat);
+                Log.d("GetDirectionActivity", "Lat: " + lat + ", Lon: " + lon);
+                //Point point = Point.fromLngLat( 29.080499, 40.956809);
                 PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
                         .withPoint(point);
                 pointAnnotationManager.create(pointAnnotationOptions);

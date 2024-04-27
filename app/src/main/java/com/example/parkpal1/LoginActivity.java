@@ -2,6 +2,7 @@ package com.example.parkpal1;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     private Spinner roleSpinner;
-    private Button loginButton, signUpButton;;
+    private Button loginButton, backButton;;
     private EditText usernameEditText, passwordEditText;
     private DatabaseHelper dbHelper;
     @Override
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+        backButton=findViewById(R.id.backButton);
         dbHelper = new DatabaseHelper(this);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -57,6 +59,13 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SplashScreenActivity.class);
+                startActivity(intent);
             }
         });
     }

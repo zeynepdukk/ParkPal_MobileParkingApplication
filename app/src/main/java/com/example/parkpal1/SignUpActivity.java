@@ -11,7 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 public class SignUpActivity extends AppCompatActivity {
     private Spinner roleSpinner;
-    private Button signUpButton;
+    private Button signUpButton, backButton;
     private EditText usernameEditText, emailEditText, passwordEditText;
     private DatabaseHelper dbHelper;
 
@@ -25,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
+        backButton= findViewById(R.id.backButton);
         dbHelper = new DatabaseHelper(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -54,6 +55,13 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this, "Failed to register user", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUpActivity.this, SplashScreenActivity.class);
+                startActivity(intent);
             }
         });
 
