@@ -15,19 +15,27 @@ public class Street3Activity extends AppCompatActivity {
     private TextView availableSpaceTextView;
     private TextView fullSpaceTextView;
 
+    private Button addButton;
+    private Button minusButton;
+    private String userRole;
+    private DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.street3);
 
+        userRole = "Attendant";
+        dbHelper = new DatabaseHelper(this);
+
         // Initialize views
         availableSpaceTextView = findViewById(R.id.available_space);
         fullSpaceTextView = findViewById(R.id.full_space);
+        addButton = findViewById(R.id.addButton);
+        minusButton = findViewById(R.id.minusButton);
 
-        // Set initial values
-        availableSpaceTextView.setText("35");
-        fullSpaceTextView.setText("15");
-
+        dbHelper.initParkingSpaces();
+        updateTextViews();
         // Set onClickListener for Back button
         Button backButton = findViewById(R.id.parking3_backbutton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -50,5 +58,51 @@ public class Street3Activity extends AppCompatActivity {
 
             }
         });
+        if (userRole.equals("Attendant")) {
+            addButton.setVisibility(View.VISIBLE);
+            minusButton.setVisibility(View.VISIBLE);
+        } else { // Kullanıcı bir Driver ise, butonları gizle
+            addButton.setVisibility(View.GONE);
+            minusButton.setVisibility(View.GONE);
+        }
+
+        // Set onClickListener for "Add" button
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Increment availableSpace and decrement fullSpace
+                int availableSpace = Integer.parseInt(availableSpaceTextView.getText().toString()) + 1;
+                int fullSpace = Integer.parseInt(fullSpaceTextView.getText().toString()) - 1;
+                updateSpaces(availableSpace, fullSpace);
+            }
+        });
+
+        // Set onClickListener for "Minus" button
+        minusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Decrement availableSpace and increment fullSpace
+                int availableSpace = Integer.parseInt(availableSpaceTextView.getText().toString()) - 1;
+                int fullSpace = Integer.parseInt(fullSpaceTextView.getText().toString()) + 1;
+                updateSpaces(availableSpace, fullSpace);
+            }
+        });
+    }
+
+    // Update the text views with the values from the database
+    private void updateTextViews() {
+        int availableSpace = dbHelper.getAvailableSpace();
+        int fullSpace = dbHelper.getFullSpace();
+        availableSpaceTextView.setText(String.valueOf(availableSpace));
+        fullSpaceTextView.setText(String.valueOf(fullSpace));
+    }
+
+    // Update the values in the database and text views
+    private void updateSpaces(int availableSpace, int fullSpace) {
+        // Update the values in the database
+        dbHelper.updateSpaces(availableSpace, fullSpace);
+        // Update the text views
+        availableSpaceTextView.setText(String.valueOf(availableSpace));
+        fullSpaceTextView.setText(String.valueOf(fullSpace));
     }
 }

@@ -14,6 +14,7 @@
     <string name="set_route">Set Route</string>
     <string name="start_navigating">Start</string>
     <string name="back">Back</string>
+    <string name="reserve" />
     <string-array name="roles_array">
         <item>Driver</item>
         <item>Attendant</item>

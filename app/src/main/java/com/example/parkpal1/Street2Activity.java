@@ -77,6 +77,7 @@ public class Street2Activity extends AppCompatActivity {
         intent.putExtra("zone", zone);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
+        intent.putExtra("sourceActivity", "Street2Activity");
         startActivity(intent);
     }
     // Park yeri durumuna göre ImageView'ları güncelleyen metot

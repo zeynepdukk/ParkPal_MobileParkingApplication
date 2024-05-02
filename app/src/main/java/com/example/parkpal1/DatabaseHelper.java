@@ -13,7 +13,7 @@ import java.util.Random;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "parking.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Kullanıcı tablosu ve sütunları
     private static final String TABLE_USERS = "users";
@@ -28,6 +28,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ZONE = "zone";
     private static final String COLUMN_STATUS = "status";
     private static final String COLUMN_CODE = "code";
+
+    private static final String TABLE_PARKING_STATUS = "parking_status2";
+    private static final String COLUMN_AVAILABLE_SPACE = "available_space";
+    private static final String COLUMN_FULL_SPACE = "full_space";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,12 +59,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ")";
         db.execSQL(SQL_CREATE_PARKING_TABLE);
 
+        String SQL_CREATE_PARKING_STATUS_TABLE =
+                "CREATE TABLE " + TABLE_PARKING_STATUS + " (" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        COLUMN_AVAILABLE_SPACE + " INTEGER DEFAULT 0," +
+                        COLUMN_FULL_SPACE + " INTEGER DEFAULT 0" +
+                        ")";
+        db.execSQL(SQL_CREATE_PARKING_STATUS_TABLE);
+
+
+        initParkingSpaces();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARKING);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARKING_STATUS);
         onCreate(db);
     }
 
@@ -130,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return status;
     }
-    private String generateRandomCode() {
+    String generateRandomCode() {
         Random random = new Random();
         int code = random.nextInt(9000) + 1000; // Dört haneli rastgele sayı oluştur
         return String.valueOf(code);
@@ -157,5 +172,78 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return code;
     }
+    public boolean updateCode(String zone, String code) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CODE, code);
+        String selection = COLUMN_ZONE + "=?";
+        String[] selectionArgs = { zone };
+        int result = db.update(TABLE_PARKING, values, selection, selectionArgs);
+        return result > 0;
+    }
+    public void updateSpaces(int availableSpace, int fullSpace) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_AVAILABLE_SPACE, availableSpace);
+        values.put(COLUMN_FULL_SPACE, fullSpace);
+        db.update(TABLE_PARKING_STATUS, values, null, null);
+    }
+
+    // Method to get available space
+    public int getAvailableSpace() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_AVAILABLE_SPACE + " FROM " + TABLE_PARKING_STATUS;
+        Cursor cursor = db.rawQuery(query, null);
+        int availableSpace = 0;
+        if (cursor.moveToFirst()) {
+            availableSpace = cursor.getInt(0);
+        }
+        cursor.close();
+        return availableSpace;
+    }
+
+    // Method to get full space
+    public int getFullSpace() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_FULL_SPACE + " FROM " + TABLE_PARKING_STATUS;
+        Cursor cursor = db.rawQuery(query, null);
+        int fullSpace = 0;
+        if (cursor.moveToFirst()) {
+            fullSpace = cursor.getInt(0);
+        }
+        cursor.close();
+        return fullSpace;
+    }
+    public void initParkingSpaces() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_PARKING_STATUS, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+            if (count == 0) {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_AVAILABLE_SPACE, 25);
+                values.put(COLUMN_FULL_SPACE, 25);
+                db.insert(TABLE_PARKING_STATUS, null, values);
+            }
+        }
+    }
+    public boolean reserveParkingSpace(String zone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ZONE, zone);
+        values.put(COLUMN_STATUS, 1); // Park yeri dolu olarak işaretle
+        long result = db.replace(TABLE_PARKING, null, values);
+        return result != -1;
+    }
+    public boolean cancelParkingReservation(String zone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ZONE, zone);
+        values.put(COLUMN_STATUS, 0); // Park yeri boş olarak işaretle
+        long result = db.replace(TABLE_PARKING, null, values);
+        return result != -1;
+    }
+
 
 }

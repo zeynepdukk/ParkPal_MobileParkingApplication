@@ -8,7 +8,7 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+
         android:textColor="@android:color/transparent"
         android:text="@string/geri">
     </Button>
@@ -23,6 +23,24 @@
         android:textSize="45dp"
         android:textStyle="bold">
     </TextView>
+    <Button
+        android:id="@+id/reserveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:height="0dp"
+        android:text="@string/reserve"
+        android:textColor="@android:color/white"/>
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="-200dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="00:00" />
 
     <TextView
         android:id="@+id/code_text"
@@ -35,6 +53,7 @@
         android:textStyle="bold">
 
     </TextView>
+
 
     <Button
         android:id="@+id/getDirectionsButton"
