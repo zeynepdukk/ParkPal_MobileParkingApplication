@@ -12,17 +12,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
+
+import java.util.HashMap;
+
 public class ZoneActivity extends AppCompatActivity {
 
     private double lat;
     private double lon;
-    private TextView zoneTextView, codeTextView,timerTextView;
-    private Button getDirectionsButton,reserveButton;
+    private LottieAnimationView animationView;
+    private TextView zoneTextView, codeTextView;
+    private Button getDirectionsButton, reserveButton;
     private Button backButton;
-    private DatabaseHelper dbHelper;
-    private CountDownTimer countDownTimer; // Geri sayımı saklamak için değişken
-
-
+    private DatabaseHelper dbHelper;// Geri sayımı saklamak için değişken
+    private HashMap<String, CountDownTimer> timerHashMap; // Park yeri için zamanlayıcıları depolamak için kullanılacak
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +33,15 @@ public class ZoneActivity extends AppCompatActivity {
         setContentView(R.layout.parking_zone);
 
         // XML dosyasındaki bileşenleri Java'da tanımla
+        animationView=findViewById(R.id.animation_view);
         zoneTextView = findViewById(R.id.zone_text);
         codeTextView = findViewById(R.id.code_text);
         getDirectionsButton = findViewById(R.id.getDirectionsButton);
-        backButton=findViewById(R.id.backButton);
-        timerTextView=findViewById(R.id.timerTextView);
+        backButton = findViewById(R.id.backButton);
         reserveButton = findViewById(R.id.reserveButton);
 
         dbHelper = new DatabaseHelper(this);
+        timerHashMap = new HashMap<>(); // HashMap'i başlat
 
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String reservedZoneCode = sharedPreferences.getString("reservedZoneCode", "");
@@ -48,7 +52,6 @@ public class ZoneActivity extends AppCompatActivity {
             // Rezerve edilmiş bir park yeri yoksa geri sayımı başlatma
             // Burada gerekirse başka bir işlem yapabilirsiniz
         }
-
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -82,13 +85,14 @@ public class ZoneActivity extends AppCompatActivity {
                 Toast.makeText(ZoneActivity.this, "Park yeri rezerve edildi.", Toast.LENGTH_SHORT).show();
             }
         });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String sourceActivity = getIntent().getStringExtra("sourceActivity");
 
                 Intent intent;
-               // String sourceActivity = getIntent().getStringExtra("sourceActivity");
+                // String sourceActivity = getIntent().getStringExtra("sourceActivity");
                 if (sourceActivity != null && sourceActivity.equals("Street2Activity")) {
                     intent = new Intent(ZoneActivity.this, Street2Activity.class);
                 } else if (sourceActivity != null && sourceActivity.equals("Street1Activity")) {
@@ -103,6 +107,7 @@ public class ZoneActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         getDirectionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,10 +119,9 @@ public class ZoneActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }
+
+
     private void reserveParkingSpace(String zone) {
         // Rezervasyon talebini işle
         boolean reservationSuccessful = dbHelper.reserveParkingSpace(zone);
@@ -127,31 +131,35 @@ public class ZoneActivity extends AppCompatActivity {
             // Zamanlayıcıyı başlat
             startReservationTimer(zone);
 
-            // Rezervasyon yapılan zoneCode'u SharedPreferences'e kaydet
-            SharedPreferences.Editor editor = getSharedPreferences("MyPrefs", MODE_PRIVATE).edit();
-            String reservedZoneCode = dbHelper.getCode(zone);
-            editor.putString("reservedZoneCode", reservedZoneCode);
-            editor.apply();
         } else {
             // Rezervasyon başarısızsa kullanıcıya bildirim göster
             Toast.makeText(this, "Park alanı rezerve edilemedi. Lütfen tekrar deneyin.", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void startReservationTimer(final String zone) {
-        // Eğer önceden başlatılmış bir geri sayım varsa, iptal et
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
+        // Daha önce başlatılmış bir geri sayım varsa, onu iptal et
+        CountDownTimer existingTimer = timerHashMap.get(zone);
+        if (existingTimer != null) {
+            existingTimer.cancel();
         }
 
-        // Zamanlayıcıyı başlat
-        countDownTimer = new CountDownTimer(180000, 1000) { // 3 dakika (3 * 60 * 1000 milisaniye)
+        // Yeni bir geri sayım başlat
+        CountDownTimer countDownTimer = new CountDownTimer(90000, 1000) { // 1.5 dakika (90 saniye)
             public void onTick(long millisUntilFinished) {
                 // Her saniyede bir işlem yap
                 // Kalan süreyi ekrana güncelle
                 long secondsRemaining = millisUntilFinished / 1000;
                 String timeRemaining = String.format("%02d:%02d", secondsRemaining / 60, secondsRemaining % 60);
                 // Kalan süreyi kullanıcıya göster
-                timerTextView.setText(timeRemaining);
+
+
+                // Son 30 saniyede ise ve geri sayımın son 3 saniyesine geldiyse, toast gönder
+                if (millisUntilFinished <= 30000 && millisUntilFinished > 29000) {
+                    Toast.makeText(ZoneActivity.this, "Son 30 saniye!", Toast.LENGTH_SHORT).show();
+                } else if (millisUntilFinished <= 3000) {
+                    Toast.makeText(ZoneActivity.this, "Son 3 saniye!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             public void onFinish() {
@@ -161,24 +169,17 @@ public class ZoneActivity extends AppCompatActivity {
                 // Kullanıcıya sürenin dolduğuna dair bildirim göster
                 Toast.makeText(ZoneActivity.this, "Rezervasyon süresi doldu. Park alanı boş olarak işaretlendi.", Toast.LENGTH_SHORT).show();
                 // Kalan süreyi sıfırla
-                timerTextView.setText("00:00");
-
-                // Geri sayımı tekrar başlat
-                startReservationTimer(zone);
 
                 // Rezerve edilen park yerlerinin kodlarını güncelle
-                updateCodeTextView();
+                String newCode = dbHelper.generateRandomCode();
+                dbHelper.updateCode(zone, newCode);
             }
         }.start();
+
+        // Oluşturulan zamanlayıcıyı HashMap'e ekle
+        timerHashMap.put(zone, countDownTimer);
     }
 
-    private void updateCodeTextView() {
-        // Burada rezerve edilen park yerlerinin kodlarını güncelleyecek kodları yazabilirsiniz
-        // Örneğin:
-        String zone = zoneTextView.getText().toString();
-        String zoneCode = dbHelper.getCode(zone); // Yeni kodu al
-        codeTextView.setText(zoneCode);
-    }
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -186,5 +187,4 @@ public class ZoneActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
-
 }

@@ -34,7 +34,6 @@ public class Street3Activity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         minusButton = findViewById(R.id.minusButton);
 
-        dbHelper.initParkingSpaces();
         updateTextViews();
         // Set onClickListener for Back button
         Button backButton = findViewById(R.id.parking3_backbutton);

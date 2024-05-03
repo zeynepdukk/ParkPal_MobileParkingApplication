@@ -26,7 +26,7 @@ public class ZoneActivityA extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.zone_a);
+        setContentView(R.layout.zone_attendant);
 
         // View'leri tanımla
         zoneText = findViewById(R.id.zone_text);

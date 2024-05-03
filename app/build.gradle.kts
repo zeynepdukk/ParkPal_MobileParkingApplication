@@ -62,5 +62,6 @@ dependencies {
     //implementation("com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0")
    // implementation("com.mapbox.navigation:ui-dropin:2.19.0")
     implementation("com.mapbox.navigation:android:2.17.1")
+    implementation("com.airbnb.android:lottie:6.0.0")
 
 }
