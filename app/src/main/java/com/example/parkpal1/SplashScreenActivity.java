@@ -6,15 +6,12 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
-
     private Button loginButton, signUpButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        // Initialize views
         loginButton = findViewById(R.id.loginButton1);
         signUpButton= findViewById(R.id.signUpButton1);
 
@@ -26,8 +23,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Set click listener for the sign up button
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

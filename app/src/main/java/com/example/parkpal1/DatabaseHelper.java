@@ -15,14 +15,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "parking.db";
     private static final int DATABASE_VERSION = 4;
 
-    // Kullanıcı tablosu ve sütunları
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_ROLE = "role";
-
 
     private static final String TABLE_PARKING = "parking_status";
     private static final String COLUMN_ZONE = "zone";
@@ -39,7 +37,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Kullanıcı tablosu oluşturuluyor
         String SQL_CREATE_USERS =
                 "CREATE TABLE " + TABLE_USERS + " (" +
                         COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -50,7 +47,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ")";
         db.execSQL(SQL_CREATE_USERS);
 
-        // Park yeri tablosu oluşturuluyor
         String SQL_CREATE_PARKING_TABLE =
                 "CREATE TABLE " + TABLE_PARKING + " (" +
                         COLUMN_ZONE + " TEXT PRIMARY KEY," +
@@ -67,10 +63,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ")";
         db.execSQL(SQL_CREATE_PARKING_STATUS_TABLE);
 
-
         initParkingSpaces();
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
@@ -78,8 +72,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARKING_STATUS);
         onCreate(db);
     }
-
-    // Kullanıcı kaydı
     public boolean addUser(String username, String email, String password, String role) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -91,7 +83,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Kullanıcı girişi
     public boolean checkUser(String username, String password, String role) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_ID};
@@ -121,17 +112,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return userList;
     }
-    // Park yeri durumunu güncelle
     public boolean updateStatus(String zone, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ZONE, zone);
         values.put(COLUMN_STATUS, status);
-        long result = db.replace(TABLE_PARKING, null, values); // Eğer zone zaten varsa güncelleme yapacak
+        long result = db.replace(TABLE_PARKING, null, values);
         return result != -1;
     }
 
-    // Park yeri durumunu al
     public int getStatus(String zone) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PARKING, new String[]{COLUMN_STATUS}, COLUMN_ZONE + "=?", new String[]{zone}, null, null, null);
@@ -147,15 +136,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     String generateRandomCode() {
         Random random = new Random();
-        int code = random.nextInt(9000) + 1000; // Dört haneli rastgele sayı oluştur
+        int code = random.nextInt(9000) + 1000;
         return String.valueOf(code);
     }
     public boolean addParkingZone(String zone) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ZONE, zone);
-        values.put(COLUMN_STATUS, 0); // Başlangıçta park yeri boş
-        values.put(COLUMN_CODE, generateRandomCode()); // Rastgele dört haneli kod oluştur
+        values.put(COLUMN_STATUS, 0);
+        values.put(COLUMN_CODE, generateRandomCode());
         long result = db.insert(TABLE_PARKING, null, values);
         return result != -1;
     }
@@ -189,7 +178,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_PARKING_STATUS, values, null, null);
     }
 
-    // Method to get available space
     public int getAvailableSpace() {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT " + COLUMN_AVAILABLE_SPACE + " FROM " + TABLE_PARKING_STATUS;
@@ -202,7 +190,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return availableSpace;
     }
 
-    // Method to get full space
     public int getFullSpace() {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT " + COLUMN_FULL_SPACE + " FROM " + TABLE_PARKING_STATUS;
@@ -244,6 +231,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.replace(TABLE_PARKING, null, values);
         return result != -1;
     }
-
 
 }

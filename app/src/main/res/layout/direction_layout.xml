@@ -10,12 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/mapView" />
+    <Button
+        android:layout_marginTop="50dp"
+        android:id="@+id/backButton"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:background="@android:color/holo_blue_dark"
+        android:text="Back">
+    </Button>
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="10sp"
         android:layout_marginEnd="10sp"
+        android:background="@drawable/route_button"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20sp"
         android:id="@+id/setRoute"

@@ -34,6 +34,9 @@
         <activity android:name=".Street1Activity" />
         <activity android:name=".Street3Activity" />
         <activity android:name=".GetDirectionActivity" />
+        <activity android:name=".Street3Activity_Driver" />
+        <activity android:name=".Street3Activity_Attendant" />
+
 
     </application>
 

@@ -19,11 +19,7 @@ public class Street2Activity extends AppCompatActivity {
         setContentView(R.layout.street2);
 
         dbHelper = new DatabaseHelper(this);
-
-        // Park yeri durumunu al ve buna göre ImageView'ları güncelle
         updateImageViews();
-
-        // Get userRole from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         userRole = sharedPreferences.getString("userRole", "Driver"); // Default is "Driver"
 
@@ -45,7 +41,6 @@ public class Street2Activity extends AppCompatActivity {
             }
         });
 
-        // Butonlara tıklama olaylarını atanması için fonksiyon çağrısı
         setButtonClickListener(parking2_a1, "A1");
         setButtonClickListener(parking2_b1, "B1");
         setButtonClickListener(parking2_a2, "A2");
@@ -55,7 +50,6 @@ public class Street2Activity extends AppCompatActivity {
         setButtonClickListener(parking2_a4, "A4");
         setButtonClickListener(parking2_b4, "B4");
     }
-
     private void setButtonClickListener(Button button, final String zone) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +74,6 @@ public class Street2Activity extends AppCompatActivity {
         intent.putExtra("sourceActivity", "Street2Activity");
         startActivity(intent);
     }
-    // Park yeri durumuna göre ImageView'ları güncelleyen metot
     private void updateImageViews() {
         updateImageView(R.id.a1_imageView, dbHelper.getStatus("A1"));
         updateImageView(R.id.b1_imageView, dbHelper.getStatus("B1"));
@@ -95,9 +88,9 @@ public class Street2Activity extends AppCompatActivity {
     private void updateImageView(int imageViewId, int status) {
         ImageView imageView = findViewById(imageViewId);
         if (status == 1) {
-            imageView.setVisibility(View.VISIBLE); // Park yeri dolu ise görünür yap
+            imageView.setVisibility(View.VISIBLE);
         } else {
-            imageView.setVisibility(View.INVISIBLE); // Park yeri boş ise görünmez yap
+            imageView.setVisibility(View.INVISIBLE);
         }
     }
 }

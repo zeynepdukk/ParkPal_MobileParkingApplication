@@ -1,6 +1,7 @@
 package com.example.parkpal1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -89,15 +90,15 @@ import androidx.core.app.ActivityCompat;
 import com.google.gson.JsonObject;
 
 import com.google.gson.JsonObject;
-
 public class SimpleMapActivity extends AppCompatActivity {
+
+    private String userRole;
     private MapView mapView;
     private FloatingActionButton floatingActionButton;
     private boolean consumeClickEvent = false;
     private static final String POINT_1_ID = "point_1";
     private static final String POINT_2_ID = "point_2";
     private static final String POINT_3_ID = "point_3";
-
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
         public void onActivityResult(Boolean result) {
@@ -106,14 +107,12 @@ public class SimpleMapActivity extends AppCompatActivity {
             }
         }
     });
-
     private final OnIndicatorBearingChangedListener onIndicatorBearingChangedListener = new OnIndicatorBearingChangedListener() {
         @Override
         public void onIndicatorBearingChanged(double v) {
             mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(16.5).bearing(v).build());
         }
     };
-
     private final OnIndicatorPositionChangedListener onIndicatorPositionChangedListener = new OnIndicatorPositionChangedListener() {
         @Override
         public void onIndicatorPositionChanged(@NonNull Point point) {
@@ -121,7 +120,6 @@ public class SimpleMapActivity extends AppCompatActivity {
             getGestures(mapView).setFocalPoint(mapView.getMapboxMap().pixelForCoordinate(point));
         }
     };
-
     private final OnMoveListener onMoveListener = new OnMoveListener() {
         @Override
         public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
@@ -130,7 +128,6 @@ public class SimpleMapActivity extends AppCompatActivity {
             getGestures(mapView).removeOnMoveListener(onMoveListener);
             floatingActionButton.show();
         }
-
         @Override
         public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) {
             return false;
@@ -140,13 +137,15 @@ public class SimpleMapActivity extends AppCompatActivity {
         public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) {
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
         mapView = findViewById(R.id.mapView);
         floatingActionButton = findViewById(R.id.focusLocation);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        userRole = sharedPreferences.getString("userRole", "Driver"); // Default is "Driver"
 
         if (ActivityCompat.checkSelfPermission(SimpleMapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -222,8 +221,13 @@ public class SimpleMapActivity extends AppCompatActivity {
                         switch (annotationId) {
                             case POINT_1_ID:
                                 Log.d("SimpleMapActivity", "Clicked on Point 1");
-                                Intent intent1 = new Intent(SimpleMapActivity.this, Street3Activity.class);
-                                startActivity(intent1);
+                                if ("Driver".equals(userRole)) {
+                                    Intent driverIntent = new Intent(SimpleMapActivity.this, Street3Activity_Driver.class);
+                                    startActivity(driverIntent);
+                                } else if ("Attendant".equals(userRole)) {
+                                    Intent attendantIntent = new Intent(SimpleMapActivity.this, Street3Activity_Attendant.class);
+                                    startActivity(attendantIntent);
+                                }
                                 break;
                             case POINT_2_ID:
                                 Log.d("SimpleMapActivity", "Clicked on Point 2");
@@ -243,8 +247,6 @@ public class SimpleMapActivity extends AppCompatActivity {
             }
         });
     }
-
-    // Helper method to create a JsonObject with the point ID
     private JsonObject createJsonData(String pointId) {
         JsonObject jsonData = new JsonObject();
         jsonData.addProperty("id", pointId);

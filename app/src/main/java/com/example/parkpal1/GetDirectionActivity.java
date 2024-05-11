@@ -7,6 +7,7 @@ import static com.mapbox.navigation.base.extensions.RouteOptionsExtensions.apply
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -79,20 +81,18 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class GetDirectionActivity extends AppCompatActivity {
-
     double lat;
     double lon;
     MapView mapView;
     FloatingActionButton focusLocationBtn;
+    Button backButton;
     private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
     private MapboxRouteLineView routeLineView;
     private MapboxRouteLineApi routeLineApi;
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
         public void onNewRawLocation(@NonNull Location location) {
-
         }
-
         @Override
         public void onNewLocationMatcherResult(@NonNull LocationMatcherResult locationMatcherResult) {
             Location location = locationMatcherResult.getEnhancedLocation();
@@ -132,7 +132,6 @@ public class GetDirectionActivity extends AppCompatActivity {
             getGestures(mapView).removeOnMoveListener(this);
             focusLocationBtn.show();
         }
-
         @Override
         public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) {
             return false;
@@ -170,6 +169,7 @@ public class GetDirectionActivity extends AppCompatActivity {
 
         mapView = findViewById(R.id.mapView);
         focusLocationBtn = findViewById(R.id.focusLocation);
+        backButton=findViewById(R.id.backButton);
 
         MapboxRouteLineOptions options = new MapboxRouteLineOptions.Builder(this).withRouteLineResources(new RouteLineResources.Builder().build())
                 .withRouteLineBelowLayerId(LocationComponentConstants.LOCATION_INDICATOR_LAYER).build();
@@ -222,21 +222,15 @@ public class GetDirectionActivity extends AppCompatActivity {
                 final int targetWidth = 70;
                 final int targetHeight = 70;
 
-// BitmapFactory.Options oluşturun ve ölçek faktörünü ayarlayın
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeResource(getResources(), R.drawable.loc_icon, options);
                 int imageWidth = options.outWidth;
                 int imageHeight = options.outHeight;
                 int scaleFactor = Math.min(imageWidth / targetWidth, imageHeight / targetHeight);
-
-// Ölçek faktörünü kullanarak görüntüyü yükleme
                 options.inJustDecodeBounds = false;
                 options.inSampleSize = scaleFactor;
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.loc_icon, options);
-
-// Yukarıdaki kodla bitmap'i istenen boyuta küçülttük
-// Şimdi kalan işlemleri gerçekleştirin
                 AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
                 PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
                 Point point=Point.fromLngLat(lon,lat);
@@ -261,10 +255,28 @@ public class GetDirectionActivity extends AppCompatActivity {
                         focusLocationBtn.hide();
                     }
                 });
+                backButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String sourceActivity = getIntent().getStringExtra("sourceActivity");
+
+                        Intent intent;
+                        // String sourceActivity = getIntent().getStringExtra("sourceActivity");
+                        if (sourceActivity != null && sourceActivity.equals("ZoneActivityA")) {
+                            intent = new Intent(GetDirectionActivity.this, ZoneActivityA.class);
+                        } else if (sourceActivity != null && sourceActivity.equals("ZoneActivity")) {
+                            intent = new Intent(GetDirectionActivity.this, ZoneActivity.class);
+                        } else {
+                            intent = new Intent(GetDirectionActivity.this, SimpleMapActivity.class);
+                            Log.d("ZoneActivity", "Source Activity: " + sourceActivity);
+                        }
+                        startActivity(intent);
+                    }
+                });
+
             }
         });
     }
-
     @SuppressLint("MissingPermission")
     private void fetchRoute(Point point) {
         LocationEngine locationEngine = LocationEngineProvider.getBestLocationEngine(GetDirectionActivity.this);
@@ -286,26 +298,22 @@ public class GetDirectionActivity extends AppCompatActivity {
                         mapboxNavigation.setNavigationRoutes(list);
                         focusLocationBtn.performClick();
                     }
-
                     @Override
                     public void onFailure(@NonNull List<RouterFailure> list, @NonNull RouteOptions routeOptions) {
                         Toast.makeText(GetDirectionActivity.this, "Route request failed", Toast.LENGTH_SHORT).show();
                     }
-
                     @Override
                     public void onCanceled(@NonNull RouteOptions routeOptions, @NonNull RouterOrigin routerOrigin) {
 
                     }
                 });
             }
-
             @Override
             public void onFailure(@NonNull Exception exception) {
 
             }
         });
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -8,10 +8,8 @@ public class User {
     private String role;
 
     public User() {
-        // Boş kurucu metod
     }
 
-    // Getters ve setters
     public int getId() {
         return id;
     }
@@ -34,10 +32,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {

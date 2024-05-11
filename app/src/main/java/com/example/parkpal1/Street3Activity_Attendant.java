@@ -1,6 +1,8 @@
 package com.example.parkpal1;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,10 +10,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Street3Activity extends AppCompatActivity {
+public class Street3Activity_Attendant extends AppCompatActivity {
     double lat=40.956987;
     double lon=29.079050;
-
     private TextView availableSpaceTextView;
     private TextView fullSpaceTextView;
 
@@ -23,9 +24,8 @@ public class Street3Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.street3);
+        setContentView(R.layout.street3_attendant);
 
-        userRole = "Attendant";
         dbHelper = new DatabaseHelper(this);
 
         // Initialize views
@@ -40,32 +40,11 @@ public class Street3Activity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Street3Activity.this, SimpleMapActivity.class);
+                Intent intent = new Intent(Street3Activity_Attendant.this, SimpleMapActivity.class);
                 startActivity(intent);
             }
         });
 
-        // Set onClickListener for Get Direction button
-        Button getDirectionButton = findViewById(R.id.parking3_getDirection);
-        getDirectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Street3Activity.this, GetDirectionActivity.class);
-                intent.putExtra("lat", lat);
-                intent.putExtra("lon", lon);
-                startActivity(intent);
-
-            }
-        });
-        if (userRole.equals("Attendant")) {
-            addButton.setVisibility(View.VISIBLE);
-            minusButton.setVisibility(View.VISIBLE);
-        } else { // Kullanıcı bir Driver ise, butonları gizle
-            addButton.setVisibility(View.GONE);
-            minusButton.setVisibility(View.GONE);
-        }
-
-        // Set onClickListener for "Add" button
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +55,6 @@ public class Street3Activity extends AppCompatActivity {
             }
         });
 
-        // Set onClickListener for "Minus" button
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,8 +65,6 @@ public class Street3Activity extends AppCompatActivity {
             }
         });
     }
-
-    // Update the text views with the values from the database
     private void updateTextViews() {
         int availableSpace = dbHelper.getAvailableSpace();
         int fullSpace = dbHelper.getFullSpace();
@@ -96,7 +72,6 @@ public class Street3Activity extends AppCompatActivity {
         fullSpaceTextView.setText(String.valueOf(fullSpace));
     }
 
-    // Update the values in the database and text views
     private void updateSpaces(int availableSpace, int fullSpace) {
         // Update the values in the database
         dbHelper.updateSpaces(availableSpace, fullSpace);

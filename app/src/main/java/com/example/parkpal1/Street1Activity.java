@@ -13,21 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Street1Activity extends AppCompatActivity {
     private String userRole;
     private DatabaseHelper dbHelper;
-
     double lat=40.956000;
     double lon=29.079911;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.street1);
 
         dbHelper = new DatabaseHelper(this);
-
-        // Update ImageViews based on parking spot status
         updateImageViews();
-
-        // Get userRole from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         userRole = sharedPreferences.getString("userRole", "Driver"); // Default is "Driver"
 
@@ -61,7 +55,6 @@ public class Street1Activity extends AppCompatActivity {
             }
         });
 
-        // Set click listeners for buttons
         setButtonClickListener(a1_button, "A1_1");
         setButtonClickListener(a4_button, "A4_1");
         setButtonClickListener(b1_button, "B1_1");
@@ -106,10 +99,9 @@ public class Street1Activity extends AppCompatActivity {
         intent.putExtra("lon", lon);
         intent.putExtra("sourceActivity", "Street1Activity");
         //startActivity(intent);
-        startActivityForResult(intent, 1); // requestCode olarak 1 kullanıyoruz
+        startActivityForResult(intent, 1);
     }
 
-    // Update ImageViews based on parking spot status
     private void updateImageViews() {
         updateImageView(R.id.a1_imageView, dbHelper.getStatus("A1_1"));
         updateImageView(R.id.a4_imageView, dbHelper.getStatus("A4_1"));
@@ -137,18 +129,17 @@ public class Street1Activity extends AppCompatActivity {
         ImageView imageView = findViewById(imageViewId);
         if (imageView != null) {
             if (status == 1) {
-                imageView.setVisibility(View.VISIBLE); // If spot is occupied, make it visible
+                imageView.setVisibility(View.VISIBLE);
             } else {
-                imageView.setVisibility(View.INVISIBLE); // If spot is vacant, make it invisible
+                imageView.setVisibility(View.INVISIBLE);
             }
         }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) { // requestCode'i kontrol ediyoruz
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             String returnedZoneCode = data.getStringExtra("returnedZoneCode");
-            // Geri dönen zoneCode değerini kullanarak işlem yapabilirsiniz
         }
     }
 }
