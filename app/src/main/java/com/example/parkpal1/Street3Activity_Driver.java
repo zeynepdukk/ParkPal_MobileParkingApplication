@@ -47,7 +47,6 @@ public class Street3Activity_Driver extends AppCompatActivity {
 
             }
         });
-
 }
     private void updateTextViews() {
         int availableSpace = dbHelper.getAvailableSpace();

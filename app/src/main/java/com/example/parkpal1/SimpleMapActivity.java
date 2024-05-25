@@ -243,7 +243,6 @@ public class SimpleMapActivity extends AppCompatActivity {
                         return consumeClickEvent;
                     }
                 });
-
             }
         });
     }

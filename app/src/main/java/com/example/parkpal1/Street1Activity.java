@@ -23,7 +23,7 @@ public class Street1Activity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         updateImageViews();
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        userRole = sharedPreferences.getString("userRole", "Driver"); // Default is "Driver"
+        userRole = sharedPreferences.getString("userRole", "Driver");
 
         Button parking2_backbutton = findViewById(R.id.parking2_backbutton);
         Button a1_button = findViewById(R.id.a1_button);
@@ -76,7 +76,6 @@ public class Street1Activity extends AppCompatActivity {
         setButtonClickListener(c6_button, "C6_1");
         setButtonClickListener(c8_button, "C8_1");
     }
-
     private void setButtonClickListener(Button button, final String zone) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +84,6 @@ public class Street1Activity extends AppCompatActivity {
             }
         });
     }
-
     private void openZoneActivity(String zone) {
         Class<?> targetActivity;
         if (userRole.equals("Driver")) {
@@ -124,7 +122,6 @@ public class Street1Activity extends AppCompatActivity {
         updateImageView(R.id.c6_imageView, dbHelper.getStatus("C6_1"));
         updateImageView(R.id.c8_imageView, dbHelper.getStatus("C8_1"));
     }
-
     private void updateImageView(int imageViewId, int status) {
         ImageView imageView = findViewById(imageViewId);
         if (imageView != null) {

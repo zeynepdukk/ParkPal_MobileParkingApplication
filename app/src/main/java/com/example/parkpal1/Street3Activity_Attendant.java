@@ -35,7 +35,7 @@ public class Street3Activity_Attendant extends AppCompatActivity {
         minusButton = findViewById(R.id.minusButton);
 
         updateTextViews();
-        // Set onClickListener for Back button
+
         Button backButton = findViewById(R.id.parking3_backbutton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +73,8 @@ public class Street3Activity_Attendant extends AppCompatActivity {
     }
 
     private void updateSpaces(int availableSpace, int fullSpace) {
-        // Update the values in the database
+
         dbHelper.updateSpaces(availableSpace, fullSpace);
-        // Update the text views
         availableSpaceTextView.setText(String.valueOf(availableSpace));
         fullSpaceTextView.setText(String.valueOf(fullSpace));
     }

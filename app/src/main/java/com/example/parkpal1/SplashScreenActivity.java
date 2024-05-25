@@ -6,19 +6,25 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private Button loginButton, signUpButton;
+    private Button loginButton, signUpButton, infoButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-
         loginButton = findViewById(R.id.loginButton1);
         signUpButton= findViewById(R.id.signUpButton1);
+        infoButton= findViewById(R.id.infoButton);
 
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SplashScreenActivity.this, InfoActivity.class);
+                startActivity(intent);
+            }
+        });
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start LoginActivity when loginButton is clicked
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
@@ -26,10 +32,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start SignUpActivity when signUpButton is clicked
                 Intent intent = new Intent(SplashScreenActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
+
     }
 }

@@ -159,10 +159,7 @@ public class GetDirectionActivity extends AppCompatActivity {
             lon = getIntent().getDoubleExtra("lon", 0.0);
             Log.d("GetDirectionActivity", "Latitude: " + lat + ", Longitude: " + lon);
         } else {
-            // getIntent() null ise veya lat ve lon değerleri alınamıyorsa, uygun bir işlem yapın
-            // Örneğin:
             Toast.makeText(this, "Lat and Lon values are not provided", Toast.LENGTH_SHORT).show();
-            // Veya varsayılan değerlerle devam etmek isterseniz:
             lat = 0.0;
             lon = 0.0;
         }
@@ -235,7 +232,6 @@ public class GetDirectionActivity extends AppCompatActivity {
                 PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
                 Point point=Point.fromLngLat(lon,lat);
                 Log.d("GetDirectionActivity", "Lat: " + lat + ", Lon: " + lon);
-                //Point point = Point.fromLngLat( 29.080499, 40.956809);
                 PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
                         .withPoint(point);
                 pointAnnotationManager.create(pointAnnotationOptions);
@@ -273,7 +269,6 @@ public class GetDirectionActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-
             }
         });
     }
@@ -291,7 +286,6 @@ public class GetDirectionActivity extends AppCompatActivity {
                 builder.profile(DirectionsCriteria.PROFILE_DRIVING);
                 builder.bearingsList(Arrays.asList(Bearing.builder().angle(location.getBearing()).degrees(45.0).build(), null));
                 applyDefaultNavigationOptions(builder);
-
                 mapboxNavigation.requestRoutes(builder.build(), new NavigationRouterCallback() {
                     @Override
                     public void onRoutesReady(@NonNull List<NavigationRoute> list, @NonNull RouterOrigin routerOrigin) {

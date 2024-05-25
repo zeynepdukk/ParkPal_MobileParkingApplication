@@ -12,7 +12,6 @@ import android.widget.Button;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     private Button loginButton, signUpButton;
     private DatabaseHelper dbHelper;
     @Override
@@ -34,24 +33,10 @@ public class MainActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start SignUpActivity when signUpButton is clicked
                 Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
-        logUsers();
-    }
 
-    private void logUsers() {
-        List<User> userList = dbHelper.getAllUsers();
-        if (userList != null && !userList.isEmpty()) {
-            for (User user : userList) {
-                Log.d("User", "Username: " + user.getUsername() +
-                        ", Email: " + user.getEmail() +
-                        ", Role: " + user.getRole());
-            }
-        } else {
-            Log.d("User", "No users found in the database.");
-        }
     }
 }

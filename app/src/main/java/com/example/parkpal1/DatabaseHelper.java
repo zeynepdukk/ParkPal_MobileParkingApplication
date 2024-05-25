@@ -1,17 +1,17 @@
 package com.example.parkpal1;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
     private static final String DATABASE_NAME = "parking.db";
     private static final int DATABASE_VERSION = 4;
 
@@ -34,7 +34,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String SQL_CREATE_USERS =
@@ -51,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_PARKING + " (" +
                         COLUMN_ZONE + " TEXT PRIMARY KEY," +
                         COLUMN_STATUS + " INTEGER DEFAULT 0," +
-                        COLUMN_CODE + " TEXT" + // Yeni sütun ekleme
+                        COLUMN_CODE + " TEXT" +
                         ")";
         db.execSQL(SQL_CREATE_PARKING_TABLE);
 
@@ -72,45 +71,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARKING_STATUS);
         onCreate(db);
     }
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(password.getBytes());
+            BigInteger number = new BigInteger(1, hash);
+            StringBuilder hexString = new StringBuilder(number.toString(16));
+            while (hexString.length() < 64) {
+                hexString.insert(0, '0');
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public boolean addUser(String username, String email, String password, String role) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, username);
         values.put(COLUMN_EMAIL, email);
-        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_PASSWORD, hashPassword(password)); // Hash the password
         values.put(COLUMN_ROLE, role);
         long result = db.insert(TABLE_USERS, null, values);
         return result != -1;
     }
-
     public boolean checkUser(String username, String password, String role) {
         SQLiteDatabase db = this.getReadableDatabase();
+        String hashedPassword = hashPassword(password); // Hash the password
         String[] columns = {COLUMN_ID};
         String selection = COLUMN_USERNAME + "=? AND " + COLUMN_PASSWORD + "=? AND " + COLUMN_ROLE + "=?";
-        String[] selectionArgs = {username, password, role};
+        String[] selectionArgs = {username, hashedPassword, role}; // Use the hashed password
         Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
         int count = cursor.getCount();
         cursor.close();
         return count > 0;
-    }
-    @SuppressLint("Range")
-    public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS, null);
-        if (cursor.moveToFirst()) {
-            do {
-                User user = new User();
-                user.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
-                user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)));
-                user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)));
-                user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)));
-                user.setRole(cursor.getString(cursor.getColumnIndex(COLUMN_ROLE)));
-                userList.add(user);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return userList;
     }
     public boolean updateStatus(String zone, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -120,7 +114,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.replace(TABLE_PARKING, null, values);
         return result != -1;
     }
-
     public int getStatus(String zone) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PARKING, new String[]{COLUMN_STATUS}, COLUMN_ZONE + "=?", new String[]{zone}, null, null, null);
@@ -166,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CODE, code);
         String selection = COLUMN_ZONE + "=?";
-        String[] selectionArgs = { zone };
+        String[] selectionArgs = {zone};
         int result = db.update(TABLE_PARKING, values, selection, selectionArgs);
         return result > 0;
     }
@@ -189,7 +182,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return availableSpace;
     }
-
     public int getFullSpace() {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT " + COLUMN_FULL_SPACE + " FROM " + TABLE_PARKING_STATUS;
@@ -219,7 +211,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ZONE, zone);
-        values.put(COLUMN_STATUS, 1); // Park yeri dolu olarak işaretle
+        values.put(COLUMN_STATUS, 1);
         long result = db.replace(TABLE_PARKING, null, values);
         return result != -1;
     }
@@ -227,9 +219,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ZONE, zone);
-        values.put(COLUMN_STATUS, 0); // Park yeri boş olarak işaretle
+        values.put(COLUMN_STATUS, 0);
         long result = db.replace(TABLE_PARKING, null, values);
         return result != -1;
     }
-
 }

@@ -106,8 +106,6 @@ public class ZoneActivity extends AppCompatActivity {
             }
         });
     }
-
-
     private void reserveParkingSpace(String zone) {
         boolean reservationSuccessful = dbHelper.reserveParkingSpace(zone);
         if (reservationSuccessful) {
@@ -118,21 +116,20 @@ public class ZoneActivity extends AppCompatActivity {
             Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void startReservationTimer(final String zone) {
         CountDownTimer existingTimer = timerHashMap.get(zone);
         if (existingTimer != null) {
             existingTimer.cancel();
         }
-        CountDownTimer countDownTimer = new CountDownTimer(90000, 1000) { // 1.5 dakika (90 saniye)
+        CountDownTimer countDownTimer = new CountDownTimer(180000, 1000) {
             public void onTick(long millisUntilFinished) {
                 long secondsRemaining = millisUntilFinished / 1000;
                 String timeRemaining = String.format("%02d:%02d", secondsRemaining / 60, secondsRemaining % 60);
 
                 if (millisUntilFinished <= 30000 && millisUntilFinished > 29000) {
-                    Toast.makeText(ZoneActivity.this, "Son 30 saniye!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ZoneActivity.this, "Last 30 seconds!", Toast.LENGTH_SHORT).show();
                 } else if (millisUntilFinished <= 3000) {
-                    Toast.makeText(ZoneActivity.this, "Son 3 saniye!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ZoneActivity.this, "Last 3 seconds", Toast.LENGTH_SHORT).show();
                 }
             }
             public void onFinish() {
