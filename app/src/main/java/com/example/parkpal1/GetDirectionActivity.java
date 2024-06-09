@@ -257,7 +257,6 @@ public class GetDirectionActivity extends AppCompatActivity {
                         String sourceActivity = getIntent().getStringExtra("sourceActivity");
 
                         Intent intent;
-                        // String sourceActivity = getIntent().getStringExtra("sourceActivity");
                         if (sourceActivity != null && sourceActivity.equals("ZoneActivityA")) {
                             intent = new Intent(GetDirectionActivity.this, ZoneActivityA.class);
                         } else if (sourceActivity != null && sourceActivity.equals("ZoneActivity")) {
